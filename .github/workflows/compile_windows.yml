@@ -12,6 +12,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    # Set up MSBuild and Visual Studio Build Tools
+    - name: Set up MSBuild
+      uses: actions/setup-msbuild@v1
+      with:
+        vs-version: 2019
+
     - name: Compile for Windows
       run: |
         cl /EHsc /Fe:source.exe source.c
