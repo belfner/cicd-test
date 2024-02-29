@@ -4,7 +4,7 @@ on:
   push:
     # Sequence of patterns matched against refs/tags
     tags:
-    - 'v*'
+      - 'v*'
 
 
 jobs:
@@ -16,13 +16,9 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
-      # Set up MSBuild and Visual Studio Build Tools
-      - name: Set up MSBuild
-        uses: ilammy/msvc-dev-cmd@v1
-
       - name: Compile for Windows
-        run: |
-          cl /EHsc /Fe:source.exe source.c
+        shell: cmd
+        run: ${{ '"C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" && cl /EHsc /Fe:source.exe source.c' }}
 
       - name: Create Release
         id: create_release
