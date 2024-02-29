@@ -31,6 +31,8 @@ jobs:
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: Upload Release Asset
         id: upload-release-asset
@@ -39,3 +41,5 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./source.exe
           asset_name: source.exe
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
