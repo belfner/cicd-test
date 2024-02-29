@@ -1,28 +1,41 @@
 name: Compile for Windows
 
 on:
-  release:
-    types: [created]
+  push:
+    # Sequence of patterns matched against refs/tags
+    tags:
+    - 'v*'
+
 
 jobs:
   build:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v2
 
-    # Set up MSBuild and Visual Studio Build Tools
-    - name: Set up MSBuild
-      uses: ilammy/msvc-dev-cmd@v1
+      # Set up MSBuild and Visual Studio Build Tools
+      - name: Set up MSBuild
+        uses: ilammy/msvc-dev-cmd@v1
 
-    - name: Compile for Windows
-      run: |
-        cl /EHsc /Fe:source.exe source.c
+      - name: Compile for Windows
+        run: |
+          cl /EHsc /Fe:source.exe source.c
 
-    # Optionally, you can upload the compiled executable as a release artifact
-    - name: Upload artifact
-      uses: actions/upload-artifact@v2
-      with:
-        name: source
-        path: source.exe
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./source.exe
+          asset_name: source.exe
