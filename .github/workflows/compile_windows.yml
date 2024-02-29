@@ -1,0 +1,24 @@
+name: Compile for Windows
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Compile for Windows
+      run: |
+        cl /EHsc /Fe:source.exe source.c
+
+    # Optionally, you can upload the compiled executable as a release artifact
+    - name: Upload artifact
+      uses: actions/upload-artifact@v2
+      with:
+        name: source
+        path: source.exe
